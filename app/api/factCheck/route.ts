@@ -15,16 +15,16 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "你是事实核查助手，只返回简短结论。" },
+        { role: "system", content: "You are a fact checker" },
         {
           role: "user",
-          content: `请对下面文字做事实核查，并简要给出结论与可信度评分（0-1）：\n\n${text}`,
+          content: `Please perform fact checking on the following content and give a credibility score from 0 to 1, score: \n\n${text}`,
         },
       ],
       temperature: 0,
     })
     const verdict =
-      completion.choices?.[0]?.message?.content.trim() ?? "未获得结果"
+      completion.choices?.[0]?.message?.content.trim() ?? "No result obtained"
     return NextResponse.json({ verdict, score: 1 })
   } catch (err: any) {
     if (err instanceof APIError && err.code === "insufficient_quota") {
